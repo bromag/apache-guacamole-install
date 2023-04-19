@@ -1,4 +1,4 @@
-#!/bin/bash/
+#!/bin/bash
 # check logs by error's 
 # tail -f //log/messages 
 # tail -f /var/log/syslog 
