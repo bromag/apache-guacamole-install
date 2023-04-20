@@ -2,7 +2,7 @@
 # This Guacamole Server installation is only for Ubuntu 22.04 and Respbian OS!
 
 # check logs by error's 
-# tail -f //log/messages 
+# tail -f /log/messages 
 # tail -f /var/log/syslog 
 # tail -f /var/log/tomcat*/*.out 
 # tail -f /var/log/mysql/*.log
