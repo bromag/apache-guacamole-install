@@ -94,7 +94,10 @@ fi
 echo "Installing tomcat9 and mariadb-server"
 sleep 2
 apt-get install -y make tomcat9 mariadb-server
-sleep 2
+if [ $? !=0 ]; then
+    echo "apt get failed to install Tomcat9 and Mariadb-server."
+    exit 1
+fi
 echo can check if Apache Tomcat is installed correctly: http://$my_ip:8080
 sleep 3
 
@@ -104,7 +107,7 @@ echo -e "${BLUE}Downloading files...${NC}"
 
 # Download Guacamole Server
 wget -q --show-progress -O guacamole-server-${GUACVERSION}.tar.gz ${SERVER}/source/guacamole-server-${GUACVERSION}.tar.gz
-if [ $? -ne 0 ];then
+if [ $? -ne 0 ]; then
     echo -e "${RED}Failes to download guacamole-server-${GUACVERSION}.tar.gz" 1>&2
     echo -e "${SERVER}/source/guacamole-server-${GUACVERSION}.tar.gz${NC}"
     exit 1
@@ -115,9 +118,73 @@ fi
 echo -e "${GREEN}Downloaded guacamole-server-${GUACVERSION}.tar.gz${NC}"
 
 # Download Guacamole Client
-if [$? -ne 0 ];then
+if [$? -ne 0 ]; then
     echo -e "${RED}Failes to download guacamole-${GUACVERSION}.war" 1>&2
     echo -e "${SERVER}/binary/guacamole-${GUACVERSION}.war${NC}"
     exit 1
 fi
 echo -e "${GREEN}Downloaded guacamole-${GUACVERSION}.war${NC}"
+
+# Download Guacamole authentication extensions (Database)
+wget -q --show-progress -O guacamole-auth-jdbc-${GUACVERSION}.tar.gz ${SERVER}/binary/guacamole-auth-jdbc-${GUACVERSION}.tar.gz
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Failed to download guacamole-auth-jdbc-${GUACVERSION}.tar.gz" 1>&2
+    echo -e "${SERVER}/binary/guacamole-auth-jdbc-${GUACVERSION}.tar.gz"
+    exit 1
+else
+    tar -xzf guacamole-auth-jdbc-${GUACVERSION}.tar.gz
+fi
+echo -e "${GREEN}Downloaded guacamole-auth-jdbc-${GUACVERSION}.tar.gz${NC}"
+
+# Make directories
+rm -rf /etc/guacamole/lib/
+rm -rf /etc/guacamole/extensions/
+mkdir -p /etc/guacamole/lib/
+mkdir -p /etc/guacamole/extensions/
+echo GUACAMOLE_HOME=\"/etc/guacamole\" >> /etc/environment
+
+# Fix freerdp
+mkdir -p /usr/sbin/.config/freerdp
+chown daemon:daemon /usr/sbin/.config/freerdp
+
+# install guacd (Guacamole-server)
+cd guacamole-server-${GUACVERSION}/
+
+echo -e "${BLUE}Configuring Guacamole-Server. This might take a minute...${NC}"
+./configure --with-systemd-dir=/etc/systemd/system  &>> ${LOG}
+if [ $? -ne 0 ]; then
+    echo "Failed to configure guacamole-server"
+    echo "Trying agaun with --enable-allow-freerdp-snapshots"
+    ./configure --with-systemd-dir=/etc/systemd/system --enable-allow-freerdp-snapshots
+    if [$? -ne 0 ]; then
+        echo "Failed to configure guacamole-server - again"
+        exit
+    fi
+else
+    echo -e "${GREEN}OK${NC}" 
+fi
+
+echo -e "${BLUE}Running make on Guacamole-server. This might take a frew minutes...${NC}"
+make $>> ${LOG}
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Failes. See ${LOG}${NC}" 1>&2
+    exit 1
+else
+    echo -e "${GREEN}OK${NC}"
+fi
+
+echo -e "${BLUE}Running make install on Guacamole-Server...${NC}"
+make install $>> ${LOG}
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Failes. See ${LOG}${NC}" 1>&2
+    exit 1
+else
+    echo -e "${GREEN}OK${NC}"
+fi
+ldconfig
+echo
+
+# Move files to correct locations (guacamole-client & Guacamole authentication extensions)
+cd ..
+mv -f guacamole-${GUACVERSION}.war /etc/guacamole/guacamole.war
+mv -f guacamole-auth-jdbc-${GUACVERSION}/mysql/guacamole-auth-jdbc-mysql-${GUACVERSION}.jar /etc/guacamole/extensions/
