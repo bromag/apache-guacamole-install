@@ -19,6 +19,9 @@ NC='\033[0m' # No Colo
 # Homepage ~ https://guacamole.apache.org/releases/
 GUACVERSION="1.5.0"
 
+# Mysql-connector-java
+MCJVER="8.0.32"
+
 # Log Location
 LOG="/tmp/guacamole_${GUACVERSION}_build.log"
 
@@ -135,6 +138,12 @@ else
     tar -xzf guacamole-auth-jdbc-${GUACVERSION}.tar.gz
 fi
 echo -e "${GREEN}Downloaded guacamole-auth-jdbc-${GUACVERSION}.tar.gz${NC}"
+
+wget -q --show-progress -O mysql-connector-java-${MCJVER}.tar.gz https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${MCJVER}.tar.gz
+if [ $! -ne 0 ]; then
+    echo -e "${RED}Failed to Dowload mysql-connector-java-${MCJVER}" 1>&2
+    echo -e "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${MCJVER}.tar.gz${NC}"
+    exit 1
 
 # Make directories
 rm -rf /etc/guacamole/lib/
