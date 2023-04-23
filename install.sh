@@ -144,6 +144,10 @@ if [ $! -ne 0 ]; then
     echo -e "${RED}Failed to Dowload mysql-connector-java-${MCJVER}" 1>&2
     echo -e "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${MCJVER}.tar.gz${NC}"
     exit 1
+else
+    tar -xzf mysql-connector-java-${MCJVER}.tar.gz
+fi
+echo -e "${GREEN}Dowloaded mysql-connector-java-${MCJVER}.tar.gz${NC}"
 
 # Make directories
 rm -rf /etc/guacamole/lib/
@@ -151,6 +155,17 @@ rm -rf /etc/guacamole/extensions/
 mkdir -p /etc/guacamole/lib/
 mkdir -p /etc/guacamole/extensions/
 echo GUACAMOLE_HOME=\"/etc/guacamole\" >> /etc/environment
+cp /usr/src/guacamole-$GUACVERSION.war /var/lib/tomcat9/webapps/guacamole.war
+systemctl enable guacd.service
+systemctl start guacd.service
+systemctl restart tomcat9.service
+
+# Fix RDP Connection error
+adduser guacd --disabled-password --disabled-login --gecos ""
+sed -i -e 24c"\#User=daemon" /etc/systemd/system/guacd.service
+sed -i -e 25i"User=guacd" /etc/systemd/system/guacd.service
+systemctl daemon-reload
+systemctl restart guacd.service
 
 # Fix freerdp
 mkdir -p /usr/sbin/.config/freerdp
