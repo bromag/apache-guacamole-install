@@ -120,7 +120,7 @@ if [ $? !=0 ]; then
     echo "apt get failed to install Tomcat9 and Mariadb-server."
     exit 1
 fi
-echo can check if Apache Tomcat is installed correctly: http://$my_ip:8080
+echo "${Yellow}You can check if Apache Tomcat is installed correctly: http://$my_ip:8080${NC}"
 sleep 3
 
 # Set preferred download server from the Apache CDN
@@ -241,59 +241,3 @@ echo
 cd ..
 mv -f guacamole-${GUACVERSION}.war /etc/guacamole/guacamole.war
 mv -f guacamole-auth-jdbc-${GUACVERSION}/mysql/guacamole-auth-jdbc-mysql-${GUACVERSION}.jar /etc/guacamole/extensions/
-
-
-# Create User, Database, and the needed Right's 
-mysql -u root -p -e "CREATE USER 'guacamole'@'localhost' IDENTIFIED BY '$dbpw';"
-mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS guacamole DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
-mysql -u root -p -e "GRANT SELECT,INSERT,UPDATE,DELETE,CREATE ON guacamole.* TO 'guacamole'@'localhost' IDENTIFIED BY '$dbpw' WITH GRANT OPTION;"
-mysql -u root -p -e "FLUSH PRIVILEGES;"
-
-# Import Guacamole Schema
-mysql -uguacamole -p$dbpw guacamole < /usr/src/guacamole-auth-jdbc-$guacver/mysql/schema/001-create-schema.sql
-mysql -uguacamole -p$dbpw guacamole < /usr/src/guacamole-auth-jdbc-$guacver/mysql/schema/002-create-admin-user.sql
-
-# Configure guacamole.properties
-echo "Configuring guacamole properties, maybe you have to change the hostname in the File!"
-sleep 3
-
-rm -f /etc/guacamole/guacamole.properties
-touch /etc/guacamole/guacamole.properties
-
-echo "#" >> /etc/guacamole/guacamole.properties
-echo "# Hostname and Guacamole server Port" >> /etc/guacamole/guacamole.properties
-echo "#" >> /etc/guacamole/guacamole.properties
-echo "guacd-hostname: ${my_ip}" >> /etc/guacamole/guacamole.properties
-echo "guacd-port: ${guacdPort}" >> /etc/guacamole/guacamole.properties
-echo "# MySQL properties" >> /etc/guacamole/guacamole.properties
-echo "#" >> /etc/guacamole/guacamole.properties
-echo "#" >> /etc/guacamole/guacamole.properties
-echo "mysql-hostname: ${my_ip}" >> /etc/guacamole/guacamole.properties
-echo "mysql-port: ${mysqlPort}" >> /etc/guacamole/guacamole.properties
-echo "mysql-database: ${guacDb}" >> /etc/guacamole/guacamole.properties
-echo "mysql-username: ${guacUser}" >> /etc/guacamole/guacamole.properties
-echo "mysql-password: ${dbpw}" >> /etc/guacamole/guacamole.properties
-
-
-# Handling error: The server time zone value ‚CEST‘ is unrecognized or represents more than one time zone
-# Make a backup of the original 50-server.cnf file
-cp /etc/mysql/mariadb.conf.d/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf.original
-
-# Run the mysql_tzinfo_to_sql command and pipe the output to the mysql command to configure the timezone
-mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql
-
-# Add the timezone configuration to the 50-server.cnf file
-sed -i '30 i\# Timezone' /etc/mysql/mariadb.conf.d/50-server.cnf
-sed -i '31 i\default_time_zone=Europe/Berlin' /etc/mysql/mariadb.conf.d/50-server.cnf
-sed -i '32 i\ ' /etc/mysql/mariadb.conf.d/50-server.cnf
-
-# Restart the MariaDB service
-systemctl restart mariadb.service
-if [ $! -ne 0 ]; then
-    echo -e "${RED}Failed to restart mariadb.service${NC}"
-else
-    echo -e "${GREEN}OK${NC}"
-fi
-
-#Done
-echo -e "{BLUE}Installation Complete\n Visit: http://${my_ip}:8080/guacamole/\n- Default login (username/password): guacadmin/guacadmin\n***Be sure to change the password***.${NC}"
