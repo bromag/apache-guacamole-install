@@ -101,7 +101,7 @@ if [ $? !=0 ]; then
     echo "apt get failed to install Tomcat9 and Mariadb-server."
     exit 1
 fi
-echo can check if Apache Tomcat is installed correctly: http://$my_ip:8080
+echo "${Yellow}You can check if Apache Tomcat is installed correctly: http://$my_ip:8080${NC}"
 sleep 3
 
 # Set preferred download server from the Apache CDN
