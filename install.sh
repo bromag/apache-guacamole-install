@@ -132,7 +132,6 @@ if [[ "${NAME}" == "Ubuntu" ]]; then
     fi
 elif [[ "${NAME}" == "Raspbian GNU/Linux" ]];then
     JPEGTURBO="libjpeg62-turbo-dev"
-    fi
 else
     echo "Ubuntu or Raspbian Only"
     exit 1
