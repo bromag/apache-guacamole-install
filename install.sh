@@ -81,18 +81,39 @@ echo "thanks for using this script :)"
 
 sleep 2
 
-# check if system is updated
-echo "checking updates and upgrades"
-if ((updates == 0)); then
-    echo "No updates are available"
-else
-    echo "update and upgrade your system first"
-fi
-
 # check if user is root or sudo  
 if ! [ $( id -u ) = 0 ]; then
     echo "Please run this Script as sudo or root" 1>&2
     exit 1
+fi
+
+# check if system is updated
+echo "checking updates and upgrades..."
+sud apt update > /dev/null 2>&1
+update=$(sudo apt list --upgradable | wc -l)
+if ((updates == 0)); then
+    echo -e "${GREEN}No updates are available${NC}"
+else
+    echo -e "${RED}Updates are available${NC}"
+    echo -e "${YELLOW}Performing system update..${NC}"
+    sudo apt upgrade -y > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}System update completed successfully${NC}"
+        echo -e "${YELLOW}Performing system upgrade${NC}"
+        sudo apt dist-upgrade -y /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}System upgrade complete successfully${NC}"
+            echo -e "${YELLOW}Your System is getting rebootet please start the script again after the reboot!"
+            sleep 3
+            reboot
+        else
+            echo -e "${RED}System upgrade failed. Exiting..."
+            exit 1
+        fi
+    else
+        echo -e "${RED}System update failed. Exiting..."
+        exit 1
+    fi
 fi
 
 # Version number of Guacmaole to install
