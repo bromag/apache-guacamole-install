@@ -274,6 +274,17 @@ echo "mysql-database: ${guacDb}" >> /etc/guacamole/guacamole.properties
 echo "mysql-username: ${guacUser}" >> /etc/guacamole/guacamole.properties
 echo "mysql-password: ${dbpw}" >> /etc/guacamole/guacamole.properties
 
+# DUO Configuration Settings but comment them out
+echo "#" >> /etc/guacamole/guacamole.properties
+echo "# DUO Config " >> /etc/guacamole/guacamole.properties
+echo "#" >> /etc/guacamole/guacamole.properties
+echo "# duo-api-hostname: " >> /etc/guacamole/guacamole.properties
+echo "# duo-integration-key: " >> /etc/guacamole/guacamole.properties
+echo "# duo-application-key: " >> /etc/guacamole/guacamole.properties
+echo -e "${Yellow}Duo is installed, it will need to be configured via guacamole.properties${NC}"
+
+
+
 # Handling error: The server time zone value ‚CEST‘ is unrecognized or represents more than one time zone
 # Make a backup of the original 50-server.cnf file
 cp /etc/mysql/mariadb.conf.d/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf.original
