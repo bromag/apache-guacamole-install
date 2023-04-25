@@ -58,10 +58,6 @@ else
     exit 1
 fi
 
-# Store dbpw Passwort
-touch /usr/src/dbpw.txt
-echo "$dbpw" > /usr/src/dbpw.txt
-
 # check if user has read the Script
 while true; do
 
@@ -115,6 +111,10 @@ else
         exit 1
     fi
 fi
+
+# Store dbpw Passwort
+touch /usr/src/dbpw.txt
+echo "$dbpw" > /usr/src/dbpw.txt
 
 # Version number of Guacmaole to install
 GUACVERSION=1.5.0
