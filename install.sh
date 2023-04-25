@@ -49,6 +49,15 @@ else
     echo -e "No ip address found"
 fi
 
+# Check ethernet connection
+wget -q --tries=10 --timeout=40 --spider http://google.com
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}you have ethernet connection"
+else
+    echo -e "${RED}You have no ethernet connection"
+    exit 1
+fi
+
 # Store dbpw Passwort
 touch /usr/src/dbpw.txt
 echo "$dbpw" > /usr/src/dbpw.txt
