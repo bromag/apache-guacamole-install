@@ -25,10 +25,6 @@ MCJVER="8.0.32"
 # Log Location
 LOG="/tmp/guacamole_${GUACVERSION}_build.log"
 
-# Ip address from host
-ip=$(hostname -I)
-my_ip=${ip%% *}
-
 # MySQL Port
 mysqlPort="3306"
 
@@ -43,6 +39,15 @@ guacDb="guacamole"
 
 # Generate Passwort for guacamole Database
 dbpw=$(openssl rand -hex 8)
+
+# Ip address from host
+ip=$(hostname -I)
+my_ip=${ip%% *}
+if [ $? -eq 0 ]; then
+    echo -e "IP Adress found"
+else
+    echo -e "No ip address found"
+fi
 
 # Store dbpw Passwort
 touch /usr/src/dbpw.txt
@@ -168,6 +173,25 @@ else
 fi
 echo -e "${GREEN}Dowloaded mysql-connector-java-${MCJVER}.tar.gz${NC}"
 
+# Downloading Guacamole authentication extension DUO
+wget -q --show-progress -O guacamole-auth-duo-${GUACVERSION}.tar.gz ${SERVER}/binary/guacamole-auth-duo-${GUACVERSION}.tar.gz
+if [ $! -ne 0 ]; then
+    echo -e "${RED}Fauled to Download guacamole-auth-duo-${GUACVERSION}.tar.gz" 1>&2
+    echo -e "${SERVER}/binary/guacamole-auth-duo-${GUACVERSION}.tar.gz"
+    exit 1
+else
+    tar -xzf guacamole-auth-duo-${GUACVERSION}.tar.gz
+fi
+echo -e "${GREEN}Downloaded guacamole-auth-duo-${GUACVERSION}.tar.gz${NC}"
+
+if dpkg -s libguac-client-duo0 >/dev/null 2>&1; then
+    echo -e "${BLUE}Moving guacamole-auth-duo-${GUACVERSION}.jar (/etc/guacamole/extensions/)...${NC}"
+    mv -f guacamole-auth-duo-${GUACVERSION}/guacamole-auth-duo-${GUACVERSION}.jar /etc/guacamole/extensions/
+    echo
+else
+  echo "Apache Guacamole Duo package is not installed"
+fi
+
 # Make directories
 rm -rf /etc/guacamole/lib/
 rm -rf /etc/guacamole/extensions/
@@ -282,8 +306,6 @@ echo "# duo-api-hostname: " >> /etc/guacamole/guacamole.properties
 echo "# duo-integration-key: " >> /etc/guacamole/guacamole.properties
 echo "# duo-application-key: " >> /etc/guacamole/guacamole.properties
 echo -e "${Yellow}Duo is installed, it will need to be configured via guacamole.properties${NC}"
-
-
 
 # Handling error: The server time zone value ‚CEST‘ is unrecognized or represents more than one time zone
 # Make a backup of the original 50-server.cnf file
