@@ -44,9 +44,9 @@ dbpw=$(openssl rand -hex 8)
 ip=$(hostname -I)
 my_ip=${ip%% *}
 if [ $? -eq 0 ]; then
-    echo -e "IP Adress found"
+    echo -e "${CYAN}IP Adress found${NC}"
 else
-    echo -e "No ip address found"
+    echo -e "${RED}No ip address found${NC}"
 fi
 
 # Check ethernet connection
