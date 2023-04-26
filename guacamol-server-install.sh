@@ -191,6 +191,11 @@ else
 fi
 ldconfig
 
+mkdir /etc/guacamole
+mkdir /etc/guacamole/extensions
+mkdir /etc/guacamole/lib
+echo GUACAMOLE_HOME=\"/etc/guacamole\" >> /etc/environment
+
 cp /usr/src/guacamole-$GUACVER.war /var/lib/tomcat9/webapps/guacamole.war
 
 systemctl enable guacd.service
