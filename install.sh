@@ -60,9 +60,7 @@ fi
 
 # check if user has read the Script
 while true; do
-
 read -p "This Script works only with Ubuntu Server 22.04 or Respbian OS, Do you want to proceed? (y/n) " yn
-
 case $yn in 
 	[yY] ) echo ok, we will proceed;
 		break;;
@@ -70,11 +68,8 @@ case $yn in
 		exit;;
 	* ) echo invalid response;;
 esac
-
 done
-
 echo "thanks for using this script :)"
-
 sleep 2
 
 # check if user is root or sudo  
@@ -84,33 +79,45 @@ if ! [ $( id -u ) = 0 ]; then
 fi
 
 # check if system is updated
-echo "checking updates and upgrades..."
-sud apt update > /dev/null 2>&1
-update=$(sudo apt list --upgradable | wc -l)
+echo "${GREEN}Checking for updates and upgrades..."
+sleep 3
+sudo apt update > /dev/null 2>&1
+updates=$(sudo apt list --upgradable | wc -l)
 if ((updates == 0)); then
-    echo -e "${GREEN}No updates are available${NC}"
+    echo "No updates are available"
 else
-    echo -e "${RED}Updates are available${NC}"
-    echo -e "${YELLOW}Performing system update..${NC}"
+    echo "${GREEN}Updates are available"
+    echo "${YELLOW}Performing system update..."
     sudo apt upgrade -y > /dev/null 2>&1
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}System update completed successfully${NC}"
-        echo -e "${YELLOW}Performing system upgrade${NC}"
-        sudo apt dist-upgrade -y /dev/null 2>&1
+        echo "${GREEN}System update completed successfully"
+        echo "${YELLOW}Performing system upgrade..."
+        sudo apt dist-upgrade -y > /dev/null 2>&1
         if [ $? -eq 0 ]; then
-            echo -e "${GREEN}System upgrade complete successfully${NC}"
-            echo -e "${YELLOW}Your System is getting rebootet please start the script again after the reboot!"
-            sleep 3
-            reboot
+            echo "${GREEN}System upgrade completed successfully"
         else
-            echo -e "${RED}System upgrade failed. Exiting..."
+            echo "${RED}System upgrade failed. Exiting..."
             exit 1
         fi
     else
-        echo -e "${RED}System update failed. Exiting..."
+        echo "${RED}System update failed. Exiting..."
         exit 1
     fi
 fi
+
+# check if user has rebootet machine after update and upgrade
+while true; do
+read -p "${YELLOW}If the Script has found update and upgrade please make sure to reboot your system, or the installation will not complete correctly! Do you want to proceed? (y/n) " yn
+case $yn in 
+	[yY] ) echo ok, we will proceed;
+		break;;
+	[nN] ) echo exiting...;
+		exit;;
+	* ) echo invalid response;;
+esac
+done
+sleep 2
+
 
 # Store dbpw Passwort
 touch /usr/src/dbpw.txt
@@ -138,8 +145,14 @@ else
 fi
 
 # Install Server Features
+apt install -y libcairo2-dev
+apt install -y libjpeg-turbo8-dev
+apt install -y libpng-dev libtool-bin uuid-dev
+apt install -y libavcodec-dev libavformat-dev libavutil-dev libswscale-dev freerdp2-dev libpango1.0-dev libssh2-1-dev libtelnet-dev libvncserver-dev \ 
+libwebsockets-dev libpulse-dev libssl-dev libvorbis-dev libwebp-dev
+
 apt-get -y install build-essential libcairo2-dev ${JPEGTURBO} ${LIBPNG} libavcodec-dev libavformat-dev libavutil-dev libswscale-dev freerdp2-dev libpango1.0-dev libssh2-1-dev \
-libtelnet-dev libvncserver-dev libwebsockets-dev libpulse-dev libssl-dev libvorbis-dev libwebp-dev
+libtelnet-dev libvncserver-dev libwebsockets-dev libpulse-dev libssl-dev libvorbis-dev libwebp-dev libjpeg-turbo8-dev
 
 # if apt fails to run completly the rest of this isn't going to work!
 if [ $? !=0 ]; then
