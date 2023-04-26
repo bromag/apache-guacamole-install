@@ -107,7 +107,7 @@ fi
 
 # check if user has rebootet machine after update and upgrade
 while true; do
-read -p "${YELLOW}If the Script has found update and upgrade please make sure to reboot your system, or the installation will not complete correctly! Do you want to proceed? (y/n) " yn
+read -rp "${YELLOW}If the Script has found update and upgrade please make sure to reboot your system, or the installation will not complete correctly! Do you want to proceed? (y/n) " yn
 case $yn in 
 	[yY] ) echo ok, we will proceed;
 		break;;
