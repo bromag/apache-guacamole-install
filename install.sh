@@ -52,9 +52,9 @@ fi
 # Check ethernet connection
 wget -q --tries=10 --timeout=40 --spider http://google.com
 if [ $? -eq 0 ]; then
-    echo -e "${GREEN}you have ethernet connection"
+    echo -e "${GREEN}You have ethernet connection"
 else
-    echo -e "${RED}You have no ethernet connection"
+    echo -e "${RED}You have no ethernet connection${NC}"
     exit 1
 fi
 
@@ -86,28 +86,28 @@ updates=$(sudo apt list --upgradable | wc -l)
 if ((updates == 0)); then
     echo -e "No updates are available"
 else
-    echo -e "${GREEN}Updates are available"
-    echo -e "${YELLOW}Performing system update..."
+    echo -e "${GREEN}Updates are available${NC}"
+    echo -e "${YELLOW}Performing system update...${NC}"
     sudo apt upgrade -y > /dev/null 2>&1
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}System update completed successfully"
-        echo -e "${YELLOW}Performing system upgrade..."
+        echo -e "${GREEN}System update completed successfully${NC}"
+        echo -e "${YELLOW}Performing system upgrade...${NC}"
         sudo apt dist-upgrade -y > /dev/null 2>&1
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}System upgrade completed successfully"
         else
-            echo -e "${RED}System upgrade failed. Exiting..."
+            echo -e "${RED}System upgrade failed. Exiting...${NC}"
             exit 1
         fi
     else
-        echo -e "${RED}System update failed. Exiting..."
+        echo -e "${RED}System update failed. Exiting...${NC}"
         exit 1
     fi
 fi
 
 # check if user has rebootet machine after update and upgrade
 while true; do
-read -rp "${YELLOW}If the Script has found update and upgrade please make sure to reboot your system, or the installation will not complete correctly! Do you want to proceed? (y/n) " yn
+read -p "If the Script has found update and upgrade please make sure to reboot your system, or the installation will not complete correctly! Do you want to proceed? (y/n) " yn
 case $yn in 
 	[yY] ) echo ok, we will proceed;
 		break;;
@@ -143,6 +143,8 @@ else
     echo "Ubuntu or Raspbian Only"
     exit 1
 fi
+
+echo -e "${CYAN}Features are getting installed${NC}"
 
 # Install Server Features
 apt install -y libcairo2-dev
