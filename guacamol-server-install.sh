@@ -202,8 +202,6 @@ else
     echo -e "${GREEN}OK${NC}"
 fi
 
-systemctl status guacd.service
-
 systemctl restart tomcat9.service
 if [ $! -ne 0 ]; then
     echo -e "${RED}Failed to restart tomcat9.service${NC}"
@@ -215,7 +213,13 @@ adduser guacd --disabled-password --disabled-login --gecos ""
 sed -i -e 24c"\#User=daemon" /etc/systemd/system/guacd.service
 sed -i -e 25i"User=guacd" /etc/systemd/system/guacd.service
 systemctl daemon-reload
+
 systemctl restart guacd.service
+if [ $! -ne 0 ]; then
+    echo -e "${RED}Failed to start guacd.service${NC}"
+else
+    echo -e "${GREEN}OK${NC}"
+fi
 
 wget -q --show-progress --trust-server-names "https://apache.org/dyn/closer.cgi?action=download&filename=guacamole/$GUACVER/binary/guacamole-auth-jdbc-$GUACVER.tar.gz" -O /usr/src/guacamole-auth-jdbc-$GUACVER.tar.gz
 if [ $! -ne 0 ]; then
