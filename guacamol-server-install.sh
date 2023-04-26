@@ -149,11 +149,11 @@ if [ $? -ne 0 ]; then
 else
     # Extract Guacmaole Files
     echo -e "${CYAN}Download complete${NC}"
-    tar -xvzf guacamole-server-${GUACVER}.tar.gz -C /usr/src/
+    tar -xvzf guacamole-server-$GUACVER.tar.gz -C /usr/src/
 fi
 
 
-echo -e "${GREEN}Downloaded guacamole-server-${GUACVERSION}.tar.gz${NC}"
+echo -e "${GREEN}Downloaded guacamole-server-$GUACVERSION.tar.gz${NC}"
 
 wget -q --show-progress --trust-server-names "https://apache.org/dyn/closer.cgi?action=download&filename=guacamole/$GUACVER/binary/guacamole-$GUACVER.war" -O /usr/src/guacamole-$GUACVER.war
 if [ $? -ne 0 ]; then
