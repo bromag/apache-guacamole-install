@@ -155,7 +155,7 @@ else
         cd
     else
         echo -e "${RED}Failed"
-    if
+    fi
 fi
 
 
