@@ -117,14 +117,9 @@ esac
 done
 sleep 2
 
-
 # Store dbpw Passwort
 touch /usr/src/dbpw.txt
 echo "$dbpw" > /usr/src/dbpw.txt
-
-# Version number of Guacmaole to install
-GUACVERSION=1.5.0
-
 
 apt install -y libcairo2-dev
 apt install -y libjpeg-turbo8-dev
