@@ -146,13 +146,9 @@ fi
 
 # Install Server Features
 apt install -y libcairo2-dev
-apt install -y libjpeg-turbo8-dev
-apt install -y libpng-dev libtool-bin uuid-dev
-apt install -y libavcodec-dev libavformat-dev libavutil-dev libswscale-dev freerdp2-dev libpango1.0-dev libssh2-1-dev libtelnet-dev libvncserver-dev \ 
-libwebsockets-dev libpulse-dev libssl-dev libvorbis-dev libwebp-dev
-
-apt-get -y install build-essential libcairo2-dev ${JPEGTURBO} ${LIBPNG} libavcodec-dev libavformat-dev libavutil-dev libswscale-dev freerdp2-dev libpango1.0-dev libssh2-1-dev \
-libtelnet-dev libvncserver-dev libwebsockets-dev libpulse-dev libssl-dev libvorbis-dev libwebp-dev libjpeg-turbo8-dev
+apt install -y ${JPEGTURBO}
+apt install -y ${LIBPNG} libtool-bin uuid-dev
+apt install -y libavcodec-dev libavformat-dev libavutil-dev libswscale-dev freerdp2-dev libpango1.0-dev libssh2-1-dev libtelnet-dev libvncserver-dev libwebsockets-dev libpulse-dev libssl-dev libvorbis-dev libwebp-dev
 
 # if apt fails to run completly the rest of this isn't going to work!
 if [ $? !=0 ]; then
