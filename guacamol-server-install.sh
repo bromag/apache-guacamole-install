@@ -152,16 +152,16 @@ else
 fi
 echo -e "${GREEN}Downloaded guacamole-server-${GUACVERSION}.tar.gz${NC}"
 
-
 wget -q --show-progress --trust-server-names "https://apache.org/dyn/closer.cgi?action=download&filename=guacamole/$GUACVER/binary/guacamole-$GUACVER.war" -O /usr/src/guacamole-$GUACVER.war
 if [ $! -ne 0 ]; then
-    echo -e "${RED}Failes to download guacamole-$GUACVER.war${NC}"
+    echo -e "${RED}Failed to download guacamole-$GUACVER.war${NC}"
     exit 1
 else
     echo -e "${GREEN}Downloaded guacamole-$GUACVER.war${NC}"
 fi
 
 cd /usr/src/guacamole-server-$GUACVER
+
 ./configure --with-systemd-dir=/etc/systemd/system
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failed to configure guacamole-server${NC}"
@@ -194,10 +194,22 @@ echo GUACAMOLE_HOME=\"/etc/guacamole\" >> /etc/environment
 cp /usr/src/guacamole-$GUACVER.war /var/lib/tomcat9/webapps/guacamole.war
 
 systemctl enable guacd.service
+
 systemctl start guacd.service
+if [ $! -ne 0 ]; then
+    echo -e "${RED}Failed to start guacd.service${NC}"
+else
+    echo -e "${GREEN}OK${NC}"
+fi
+
 systemctl status guacd.service
 
 systemctl restart tomcat9.service
+if [ $! -ne 0 ]; then
+    echo -e "${RED}Failed to restart tomcat9.service${NC}"
+else
+    echo -e "${GREEN}OK${NC}"
+fi
 
 adduser guacd --disabled-password --disabled-login --gecos ""
 sed -i -e 24c"\#User=daemon" /etc/systemd/system/guacd.service
