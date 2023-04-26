@@ -283,7 +283,7 @@ else
 fi
 
 echo -e "${BLUE}Running make on Guacamole-server. This might take a frew minutes...${NC}"
-make $>> ${LOG}
+make >> ${LOG} 2>&1
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failes. See ${LOG}${NC}" 1>&2
     exit 1
@@ -292,7 +292,7 @@ else
 fi
 
 echo -e "${BLUE}Running make install on Guacamole-Server...${NC}"
-make install $>> ${LOG}
+make install >> ${LOG}
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failes. See ${LOG}${NC}" 1>&2
     exit 1
