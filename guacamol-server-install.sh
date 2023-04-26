@@ -165,7 +165,7 @@ cd /usr/src/guacamole-server-$GUACVER
 
 ./configure --with-systemd-dir=/etc/systemd/system
 if [ $? -ne 0 ]; then
-    echo -e "${RED}Failed to configure guacamole-server-$GUACVER${NC}"
+    echo -e "${RED}Failed to configure guacamole-server${NC}"
 else
     echo -e "${GREEN}OK${NC}"
 fi
