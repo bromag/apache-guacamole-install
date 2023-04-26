@@ -79,28 +79,28 @@ if ! [ $( id -u ) = 0 ]; then
 fi
 
 # check if system is updated
-echo "${GREEN}Checking for updates and upgrades..."
+echo -e "${GREEN}Checking for updates and upgrades..."
 sleep 3
 sudo apt update > /dev/null 2>&1
 updates=$(sudo apt list --upgradable | wc -l)
 if ((updates == 0)); then
-    echo "No updates are available"
+    echo -e "No updates are available"
 else
-    echo "${GREEN}Updates are available"
-    echo "${YELLOW}Performing system update..."
+    echo -e "${GREEN}Updates are available"
+    echo -e "${YELLOW}Performing system update..."
     sudo apt upgrade -y > /dev/null 2>&1
     if [ $? -eq 0 ]; then
-        echo "${GREEN}System update completed successfully"
-        echo "${YELLOW}Performing system upgrade..."
+        echo -e "${GREEN}System update completed successfully"
+        echo -e "${YELLOW}Performing system upgrade..."
         sudo apt dist-upgrade -y > /dev/null 2>&1
         if [ $? -eq 0 ]; then
-            echo "${GREEN}System upgrade completed successfully"
+            echo -e "${GREEN}System upgrade completed successfully"
         else
-            echo "${RED}System upgrade failed. Exiting..."
+            echo -e "${RED}System upgrade failed. Exiting..."
             exit 1
         fi
     else
-        echo "${RED}System update failed. Exiting..."
+        echo -e "${RED}System update failed. Exiting..."
         exit 1
     fi
 fi
