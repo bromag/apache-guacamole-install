@@ -224,14 +224,9 @@ else
 fi
 echo -e "${GREEN}Downloaded guacamole-auth-duo-${GUACVERSION}.tar.gz${NC}"
 
-# Move Duo Files
-if dpkg -s libguac-client-duo0 >/dev/null 2>&1; then
-    echo -e "${BLUE}Moving guacamole-auth-duo-${GUACVERSION}.jar (/etc/guacamole/extensions/)...${NC}"
-    mv -f guacamole-auth-duo-${GUACVERSION}/guacamole-auth-duo-${GUACVERSION}.jar /etc/guacamole/extensions/
-    echo
-else
-  echo "Apache Guacamole Duo package is not installed"
-fi
+# Moving DUO
+echo -e "${BLUE}Moving guacamole-auth-duo-${GUACVERSION}.jar (/etc/guacamole/extensions/)...${NC}"
+mv -f guacamole-auth-duo-${GUACVERSION}/guacamole-auth-duo-${GUACVERSION}.jar /etc/guacamole/extensions/
 
 # Make directories
 rm -rf /etc/guacamole/lib/
@@ -239,7 +234,6 @@ rm -rf /etc/guacamole/extensions/
 mkdir -p /etc/guacamole/lib/
 mkdir -p /etc/guacamole/extensions/
 echo GUACAMOLE_HOME=\"/etc/guacamole\" >> /etc/environment
-cp /usr/src/guacamole-$GUACVERSION.war /var/lib/tomcat9/webapps/guacamole.war
 systemctl enable guacd.service
 systemctl start guacd.service
 
@@ -282,7 +276,7 @@ else
     echo -e "${GREEN}OK${NC}" 
 fi
 
-echo -e "${BLUE}Running make on Guacamole-server. This might take a frew minutes...${NC}"
+echo -e "${BLUE}Running make on Guacamole-server. This might take few a minutes...${NC}"
 make >> ${LOG} 2>&1
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failes. See ${LOG}${NC}" 1>&2
@@ -309,10 +303,10 @@ mv -f guacamole-auth-jdbc-${GUACVERSION}/mysql/guacamole-auth-jdbc-mysql-${GUACV
 
 
 # Create User, Database, and the needed Right's 
-mysql -u root -p -e "CREATE USER 'guacamole'@'localhost' IDENTIFIED BY '$dbpw';"
-mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS guacamole DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
-mysql -u root -p -e "GRANT SELECT,INSERT,UPDATE,DELETE,CREATE ON guacamole.* TO 'guacamole'@'localhost' IDENTIFIED BY '$dbpw' WITH GRANT OPTION;"
-mysql -u root -p -e "FLUSH PRIVILEGES;"
+mysql -u root -p$dpkg -e "CREATE USER 'guacamole'@'localhost' IDENTIFIED BY '$dbpw';"
+mysql -u root -p$dpkg -e "CREATE DATABASE IF NOT EXISTS guacamole DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
+mysql -u root -p$dpkg -e "GRANT SELECT,INSERT,UPDATE,DELETE,CREATE ON guacamole.* TO 'guacamole'@'localhost' IDENTIFIED BY '$dbpw' WITH GRANT OPTION;"
+mysql -u root -p$dpkg -e "FLUSH PRIVILEGES;"
 
 # Import Guacamole Schema
 mysql -uguacamole -p$dbpw guacamole < /usr/src/guacamole-auth-jdbc-$guacver/mysql/schema/001-create-schema.sql
@@ -322,8 +316,11 @@ mysql -uguacamole -p$dbpw guacamole < /usr/src/guacamole-auth-jdbc-$guacver/mysq
 echo "Configuring guacamole properties, maybe you have to change the hostname in the File!"
 sleep 3
 
-rm -f /etc/guacamole/guacamole.properties
-touch /etc/guacamole/guacamole.properties
+if [ -f "/etc/guacamole/guacamole.properties" ]; then
+    touch /etc/guacamole/guacamole.properties
+else
+    echo -e "${RED}File does not exist"
+fi
 
 echo "#" >> /etc/guacamole/guacamole.properties
 echo "# Hostname and Guacamole server Port" >> /etc/guacamole/guacamole.properties
