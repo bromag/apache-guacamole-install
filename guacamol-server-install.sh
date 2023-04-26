@@ -59,7 +59,7 @@ fi
 
 # check if user has read the Script
 while true; do
-read -p "This Script works only with Ubuntu Server 22.04 or Respbian OS, Do you want to proceed? (y/n) " yn
+read -p "This Script works only with Ubuntu Server 22.04 Do you want to proceed? (y/n) " yn
 case $yn in 
 	[yY] ) echo ok, we will proceed;
 		break;;
