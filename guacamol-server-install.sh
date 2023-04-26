@@ -143,7 +143,7 @@ else
 fi
 
 wget -q --show-progress --trust-server-names "https://apache.org/dyn/closer.cgi?action=download&filename=guacamole/$GUACVER/source/guacamole-server-$GUACVER.tar.gz" -O /usr/src/guacamole-server-$GUACVER.tar.gz
-if [ $? -ne 0 ]; then
+if [ $! -ne 0 ]; then
     echo -e "${RED}Failed to download guacamole-server-${GUACVER}.tar.gz"
     exit 1
 else
