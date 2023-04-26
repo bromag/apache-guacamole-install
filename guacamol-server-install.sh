@@ -153,7 +153,7 @@ else
 fi
 
 
-echo -e "${GREEN}Downloaded guacamole-server-$GUACVERSION.tar.gz${NC}"
+echo -e "${GREEN}Downloaded guacamole-server-$GUACVER.tar.gz${NC}"
 
 wget -q --show-progress --trust-server-names "https://apache.org/dyn/closer.cgi?action=download&filename=guacamole/$GUACVER/binary/guacamole-$GUACVER.war" -O /usr/src/guacamole-$GUACVER.war
 if [ $? -ne 0 ]; then
@@ -243,6 +243,7 @@ else
 fi
 
 cp /usr/src/guacamole-auth-jdbc-$GUACVER/mysql/guacamole-auth-jdbc-mysql-$GUACVER.jar /etc/guacamole/extensions/
+
 cp /usr/src/mysql-connector-j-$MCJVER/mysql-connector-j-$MCJVER.jar /etc/guacamole/lib/
 
 
