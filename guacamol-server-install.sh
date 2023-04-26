@@ -153,6 +153,8 @@ else
         cd /usr/src/
         tar -xvzf guacamole-server-$GUACVER.tar.gz
         cd
+    else
+        echo -e "${RED}Failed"
     if
 fi
 
