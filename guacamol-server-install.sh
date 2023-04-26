@@ -144,10 +144,11 @@ fi
 
 wget -q --show-progress --trust-server-names "https://apache.org/dyn/closer.cgi?action=download&filename=guacamole/$GUACVER/source/guacamole-server-$GUACVER.tar.gz" -O /usr/src/guacamole-server-$GUACVER.tar.gz
 if [ $? -ne 0 ]; then
-    echo -e "${RED}Failes to download guacamole-server-${GUACVER}.tar.gz"
+    echo -e "${RED}Failed to download guacamole-server-${GUACVER}.tar.gz"
     exit 1
 else
     # Extract Guacmaole Files
+    echo -e "${CYAN}Download complete${NC}"
     tar -xvzf guacamole-server-${GUACVER}.tar.gz -C /usr/src/
 fi
 echo -e "${GREEN}Downloaded guacamole-server-${GUACVERSION}.tar.gz${NC}"
@@ -164,7 +165,7 @@ cd /usr/src/guacamole-server-$GUACVER
 
 ./configure --with-systemd-dir=/etc/systemd/system
 if [ $? -ne 0 ]; then
-    echo -e "${RED}Failed to configure guacamole-server${NC}"
+    echo -e "${RED}Failed to configure guacamole-server-$GUACVER${NC}"
 else
     echo -e "${GREEN}OK${NC}"
 fi
