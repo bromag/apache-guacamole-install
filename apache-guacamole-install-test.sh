@@ -150,8 +150,7 @@ else
     if [ $! -ne 0 ]; then
         # Extract Guacmaole Files
         echo -e "${CYAN}Download complete${NC}"
-        cd /usr/src/
-        tar -xvzf guacamole-server-$GUACVER.tar.gz
+        tar -xvzf /usr/src/guacamole-server-$GUACVER.tar.gz -C /usr/src/
         cd
     else
         echo -e "${RED}Failed"
