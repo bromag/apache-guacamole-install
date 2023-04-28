@@ -301,4 +301,4 @@ else
 fi
 
 #Done
-echo -e "{BLUE}Installation Complete\n Visit: http://${my_ip}:8080/guacamole/\n- Default login (username/password): guacadmin/guacadmin\n***Be sure to change the password***.${NC}"
+echo -e "${BLUE}Installation Complete\n Visit: http://${my_ip}:8080/guacamole/\n- Default login (username/password): guacadmin/guacadmin\n***Be sure to change the password***.${NC}"
