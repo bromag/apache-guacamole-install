@@ -235,7 +235,7 @@ else
 fi
 
 wget -q --show-progress "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-$MCJVER.tar.gz" -O /usr/src/mysql-connector-java-$MCJVER.tar.gz
-if [ $! -ne 0 ]; then
+if [ $? -ne 0 ]; then
     echo -e "${RED}Failes to download mysql-connector-java-$MCJVER.tar.gz${NC}"
     exit 1
 else
