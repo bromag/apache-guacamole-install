@@ -106,7 +106,7 @@ fi
 
 # check if user has rebootet machine after update and upgrade
 while true; do
-read -p "If the Script has found update and upgrade please make sure to reboot your system, or the installation will not complete correctly! Do you want to proceed? (y/n) " yn
+read -p "If the Script has found update and upgrade please make sure to reboot your system, or the installation will not complete correctly! Do you want to proceed? (y/n) ${NC}" yn
 case $yn in 
 	[yY] ) echo ok, we will proceed;
 		break;;
@@ -234,7 +234,7 @@ else
     tar xvzf /usr/src/guacamole-auth-jdbc-$GUACVER.tar.gz -C /usr/src/
 fi
 
-wget -q --show-progress "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-MCJVER.tar.gz" -O /usr/src/mysql-connector-java-$MCJVER.tar.gz
+wget -q --show-progress "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-$MCJVER.tar.gz" -O /usr/src/mysql-connector-java-$MCJVER.tar.gz
 if [ $! -ne 0 ]; then
     echo -e "${RED}Failes to download mysql-connector-java-$MCJVER.tar.gz${NC}"
     exit 1
