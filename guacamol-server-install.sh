@@ -135,7 +135,7 @@ else
 fi
 
 apt install -y make tomcat9 mariadb-server
-if [ $? !=0 ]; then
+if [ $? != 0 ]; then
     echo "apt get failed to install Tomcat9 and Mariadb-server."
     exit 1
 else
@@ -143,19 +143,14 @@ else
 fi
 
 wget -q --show-progress --trust-server-names "https://apache.org/dyn/closer.cgi?action=download&filename=guacamole/$GUACVER/source/guacamole-server-$GUACVER.tar.gz" -O /usr/src/guacamole-server-$GUACVER.tar.gz
-if [ $? -ne 0 ]; then
-    echo -e "${RED}Failed to download guacamole-server-${GUACVER}.tar.gz"
-    exit 1
+if [ $? -eq 0 ]; then
+    # Extract Guacmaole Files
+    echo -e "${CYAN}Download complete${NC}"
+    cd /usr/src/
+    tar -xvzf guacamole-server-$GUACVER.tar.gz
+    cd
 else
-    if [ $! -ne 0 ]; then
-        # Extract Guacmaole Files
-        echo -e "${CYAN}Download complete${NC}"
-        cd /usr/src/
-        tar -xvzf guacamole-server-$GUACVER.tar.gz
-        cd
-    else
-        echo -e "${RED}Failed"
-    fi
+    echo -e "${RED}Failed"
 fi
 
 
