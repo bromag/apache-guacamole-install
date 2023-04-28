@@ -39,6 +39,9 @@ guacDb="guacamole"
 # Generate Passwort for guacamole Database
 dbpw=$(openssl rand -hex 8)
 
+# localhost
+localhost="127.0.0.1"
+
 # Ip address from host
 ip=$(hostname -I)
 my_ip=${ip%% *}
@@ -47,8 +50,6 @@ if [ $? -eq 0 ]; then
 else
     echo -e "${RED}No ip address found${NC}"
 fi
-
-localhost="127.0.0.1"
 
 # Check ethernet connection
 wget -q --tries=10 --timeout=40 --spider http://google.com
@@ -274,7 +275,7 @@ echo "mysql-hostname: ${localhost}" >> /etc/guacamole/guacamole.properties
 echo "mysql-port: ${mysqlPort}" >> /etc/guacamole/guacamole.properties
 echo "mysql-database: ${guacDb}" >> /etc/guacamole/guacamole.properties
 echo "mysql-username: ${guacUser}" >> /etc/guacamole/guacamole.properties
-echo "mysql-password: ${dbpw}" >> /etc/guacamole/guacamole.properties
+echo "mysql-password: $dbpw" >> /etc/guacamole/guacamole.properties
 
 # DUO Configuration Settings but comment them out
 echo "#" >> /etc/guacamole/guacamole.properties
