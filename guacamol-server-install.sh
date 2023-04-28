@@ -48,6 +48,8 @@ else
     echo -e "${RED}No ip address found${NC}"
 fi
 
+localhost="127.0.0.1"
+
 # Check ethernet connection
 wget -q --tries=10 --timeout=40 --spider http://google.com
 if [ $? -eq 0 ]; then
@@ -263,12 +265,12 @@ mysql -uguacamole -p$dbpw guacamole < /usr/src/guacamole-auth-jdbc-$GUACVER/mysq
 echo "#" >> /etc/guacamole/guacamole.properties
 echo "# Hostname and Guacamole server Port" >> /etc/guacamole/guacamole.properties
 echo "#" >> /etc/guacamole/guacamole.properties
-echo "guacd-hostname: ${my_ip}" >> /etc/guacamole/guacamole.properties
+echo "guacd-hostname: ${localhost}" >> /etc/guacamole/guacamole.properties
 echo "guacd-port: ${guacdPort}" >> /etc/guacamole/guacamole.properties
 echo "# MySQL properties" >> /etc/guacamole/guacamole.properties
 echo "#" >> /etc/guacamole/guacamole.properties
 echo "#" >> /etc/guacamole/guacamole.properties
-echo "mysql-hostname: ${my_ip}" >> /etc/guacamole/guacamole.properties
+echo "mysql-hostname: ${localhost}" >> /etc/guacamole/guacamole.properties
 echo "mysql-port: ${mysqlPort}" >> /etc/guacamole/guacamole.properties
 echo "mysql-database: ${guacDb}" >> /etc/guacamole/guacamole.properties
 echo "mysql-username: ${guacUser}" >> /etc/guacamole/guacamole.properties
