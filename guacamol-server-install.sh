@@ -231,7 +231,9 @@ if [ $! -ne 0 ]; then
     exit 1
 else
     echo -e "${GREEN}guacamole-auth-jdbc-$GUACVER.tar.gz${NC}"
-    tar xvzf /usr/src/guacamole-auth-jdbc-$GUACVER.tar.gz -C /usr/src/
+    cd /usr/src/
+    tar xvzf /usr/src/guacamole-auth-jdbc-$GUACVER.tar.gz
+    cd
 fi
 
 wget -q --show-progress "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-$MCJVER.tar.gz" -O /usr/src/mysql-connector-java-$MCJVER.tar.gz
