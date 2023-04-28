@@ -238,11 +238,13 @@ fi
 
 wget -q --show-progress "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-$MCJVER.tar.gz" -O /usr/src/mysql-connector-java-$MCJVER.tar.gz
 if [ $? -ne 0 ]; then
-    echo -e "${RED}Failes to download mysql-connector-java-$MCJVER.tar.gz${NC}"
+    echo -e "${RED}Failed to download mysql-connector-java-$MCJVER.tar.gz${NC}"
     exit 1
 else
     echo -e "${GREEN}mysql-connector-java-$MCJVER.tar.gz${NC}"
-    tar xvzf /usr/src/guacamole-auth-jdbc-$GUACVER.tar.gz -C /usr/src/
+    cd /usr/src
+    tar xvzf /usr/src/mysql-connector-java-$MCJVER.tar.gz
+    cd
 fi
 
 cp /usr/src/guacamole-auth-jdbc-$GUACVER/mysql/guacamole-auth-jdbc-mysql-$GUACVER.jar /etc/guacamole/extensions/
