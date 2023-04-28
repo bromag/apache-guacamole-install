@@ -185,7 +185,7 @@ fi
 echo -e "${GREEN}Downloaded guacamole-server-${GUACVERSION}.tar.gz${NC}"
 
 # Download Guacamole Client
-if [$? -ne 0 ]; then
+if [ $? -ne 0 ]; then
     echo -e "${RED}Failes to download guacamole-${GUACVERSION}.war" 1>&2
     echo -e "${SERVER}/binary/guacamole-${GUACVERSION}.war${NC}"
     exit 1
@@ -298,9 +298,8 @@ echo
 
 # Move files to correct locations (guacamole-client & Guacamole authentication extensions)
 cd ..
-mv -f guacamole-${GUACVERSION}.war /etc/guacamole/guacamole.war
-mv -f guacamole-auth-jdbc-${GUACVERSION}/mysql/guacamole-auth-jdbc-mysql-${GUACVERSION}.jar /etc/guacamole/extensions/
-
+cp /usr/src/guacamole-$GUACVERSION.war /var/lib/tomcat9/webapps/guacamole.war
+cp guacamole-auth-jdbc-$GUACVERSION/mysql/guacamole-auth-jdbc-mysql-$GUACVERSION.jar /etc/guacamole/extensions/
 
 # Create User, Database, and the needed Right's 
 mysql -u root -p$dpkg -e "CREATE USER 'guacamole'@'localhost' IDENTIFIED BY '$dbpw';"
