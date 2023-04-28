@@ -142,18 +142,19 @@ else
     echo "Tomcat and mariadb-server are installed"
 fi
 
-wget -q --show-progress --trust-server-names "https://apache.org/dyn/closer.cgi?action=download&filename=guacamole/${GUACVER}/source/guacamole-server-${GUACVER}.tar.gz" -O /usr/src/guacamole-server-${GUACVER}.tar.gz
+#wget -q --show-progress --trust-server-names "https://apache.org/dyn/closer.cgi?action=download&filename=guacamole/${GUACVER}/source/guacamole-server-${GUACVER}.tar.gz" -O /usr/src/guacamole-server-${GUACVER}.tar.gz
+
+#Server URL
+SERVER="http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/${GUACVER}"
+
+wget -O guacamole-server-${GUACVER}.tar.gz ${SERVER}/usr/src/guacamole-server-${GUACVER}.tar.gz
+
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failed to download guacamole-server-${GUACVER}.tar.gz"
     exit 1
 else
-    if [ $! -ne 0 ]; then
-        # Extract Guacmaole Files
-        echo -e "${CYAN}Download complete${NC}"
-        tar -xzf /usr/src/guacamole-server-${GUACVER}.tar.gz 
-    else
-        echo -e "${RED}Failed"
-    fi
+    echo -e "${CYAN}Download complete${NC}"
+    tar -xzf guacamole-server-${GUACVERSION}.tar.gz
 fi
 
 
